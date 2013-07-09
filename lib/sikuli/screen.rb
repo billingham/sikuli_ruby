@@ -22,8 +22,8 @@ module Sikuli
       @java_obj.capture(*args)
     end
 
-    def captureDigest(*args)
-      img = capture(*args)
+    def captureRawDigest(x,y,w,h)
+      img = capture(x,y,w,h)
       #puts v.java_class.declared_instance_methods
       buffer = img.getImage.getRaster.getDataBuffer
       #puts 'number of banks',b.getNumBanks
@@ -34,8 +34,14 @@ module Sikuli
         j+=1
       end
 
-      'image-capture-data-hash-'+Digest::MD5.hexdigest(data.join)
+      Digest::MD5.hexdigest(data.join)
     end
 
+    def captureDigest(x,y,w,h)
+      digest = captureRawDigest(x,y,w,h)
+
+      'DIGEST:{x=%s,y=%s,w=%s,h=%s}[%s]'% [x,y,w,h,digest]
+    end
   end
+
 end
